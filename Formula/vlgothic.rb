@@ -1,13 +1,31 @@
-class PowerlineSymbols < Formula
-  desc "PowerlineSymbols.otf for powerline."
-  homepage "https://github.com/powerline/fonts"
-
-  url "https://github.com/powerline/powerline/raw/develop/font/PowerlineSymbols.otf"
-  sha256 "4a2496a009b1649878ce067a7ec2aed9f79656c90136971e1dba00766515f7a1"
-  version "20151204.0"
-  revision 2
+class Vlgothic < Formula
+  desc "VL Gothic and VL PGothic TTF Font."
+  homepage "http://vlgothic.dicey.org/"
+  url "https://mirrors.wikimedia.org/debian/pool/main/f/fonts-vlgothic/fonts-vlgothic_20200720.orig.tar.xz"
+  version "20200720"
+  sha256 "297a3813675fbea12c5813b55a78091c9a5946515ecbf9fde8b8102e01c579f4"
+  license "VLGothic Font License"
 
   depends_on "fontconfig" => :build
+  depends_on "z80oolong/fonts/powerline-fontpatcher" => :build
+  depends_on "z80oolong/fonts/powerline-symbols" => :recommended
+
+  def powerline_symbols_conf_xml
+    <<~EOS
+    <?xml version="1.0"?>
+    <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+    <fontconfig>
+      <alias>
+        <family>VL Gothic</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>VL PGothic</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+    </fontconfig>
+    EOS
+  end
 
   def fonts_conf_xml(path)
     <<~EOS
@@ -46,15 +64,22 @@ class PowerlineSymbols < Formula
   end
 
   def install
-    fontpath = share/"fonts/Homebrew/powerline-symbols"
+    fontpath = share/"fonts/Homebrew/vlgothic"
     fontpath.mkpath
 
-    conf = etc/"fonts/conf.d/55-homebrew-powerline-symbols.conf"
-    conf.delete if conf.exist?
+    conf1 = etc/"fonts/conf.d/55-homebrew-vlgothic.conf"
+    conf1.delete if conf1.exist?
+    conf2 = etc/"fonts/conf.d/15-powerline-symbols-vlgothic.conf"
+    conf2.delete if conf2.exist?
 
-    fontpath.install "./PowerlineSymbols.otf"
+    Pathname.glob("*.ttf").each do |ttf|
+      system "#{Formula["z80oolong/fonts/powerline-fontpatcher"].opt_bin}/powerline-fontpatcher", "./#{ttf}"
+      fontpath.install "./#{ttf}"
+      fontpath.install *Pathname.glob("*Powerline.ttf")
+    end
 
-    conf.write(fonts_conf_xml(opt_share/"fonts"))
+    conf1.write(fonts_conf_xml(opt_share/"fonts"))
+    conf2.write(powerline_symbols_conf_xml)
   end
 
   def post_install

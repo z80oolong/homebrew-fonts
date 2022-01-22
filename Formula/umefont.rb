@@ -7,6 +7,161 @@ class Umefont < Formula
   license "Mplus Font License"
 
   depends_on "fontconfig" => :build
+  depends_on "z80oolong/fonts/powerline-fontpatcher" => :build
+  depends_on "z80oolong/fonts/powerline-symbols" => :recommended
+
+  def powerline_symbols_conf_xml
+    <<~EOS
+    <?xml version="1.0"?>
+    <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+    <fontconfig>
+      <alias>
+        <family>Ume Gothic</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume Gothic C4</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume Gothic C5</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume Gothic S4</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume Gothic S5</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume Gothic O5</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume P Gothic</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume P Gothic C4</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume P Gothic C5</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume P Gothic S4</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume P Gothic S5</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume P Gothic O5</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume UI Gothic</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume UI Gothic C4</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume UI Gothic C5</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume UI Gothic S4</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume UI Gothic S5</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume UI Gothic O5</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume Hy Gothic</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume Hy Gothic C4</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume Hy Gothic C5</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume Hy Gothic S4</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume Hy Gothic S5</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume Hy Gothic O5</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume Mincho</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume Mincho C4</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume Mincho C5</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume Mincho S4</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume Mincho S5</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume Mincho O5</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume P Mincho</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume P Mincho C4</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume P Mincho C5</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume P Mincho S4</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume P Mincho S5</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume P Mincho O5</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+    </fontconfig>
+    EOS
+  end
 
   def fonts_conf_xml(path)
     <<~EOS
@@ -47,15 +202,24 @@ class Umefont < Formula
   def install
     fontpath = share/"fonts/Homebrew/umefont"
     fontpath.mkpath
-    conf = etc/"fonts/conf.d/55-homebrew-umefont.conf"
-    conf.delete if conf.exist?
 
-    fontpath.install *Pathname.glob("*.ttf").map {|ttf| "./#{ttf}"}
-    conf.write(fonts_conf_xml(opt_share/"fonts"))
+    conf1 = etc/"fonts/conf.d/55-homebrew-umefont.conf"
+    conf1.delete if conf1.exist?
+    conf2 = etc/"fonts/conf.d/15-powerline-symbols-umefont.conf"
+    conf2.delete if conf2.exist?
+
+    Pathname.glob("*.ttf").each do |ttf|
+      system "#{Formula["z80oolong/fonts/powerline-fontpatcher"].opt_bin}/powerline-fontpatcher", "./#{ttf}"
+      fontpath.install "./#{ttf}"
+      fontpath.install *Pathname.glob("*Powerline.ttf")
+    end
+
+    conf1.write(fonts_conf_xml(opt_share/"fonts"))
+    conf2.write(powerline_symbols_conf_xml)
   end
 
   def post_install
-    system "#{Formula["fontconfig"].opt_bin}/fc-cache", "-v"
+    system "#{Formula["fontconfig"].opt_bin}/fc-cache", "-vf"
   end
 
   test do

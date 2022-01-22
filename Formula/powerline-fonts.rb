@@ -8,8 +8,121 @@ class PowerlineFonts < Formula
   revision 2
   head "https://github.com/powerline/fonts.git"
 
-  depends_on "fontconfig" => [:build, :recommended]
-  depends_on "z80oolong/tmux/powerline-status" => :recommended
+  depends_on "fontconfig" => :build
+  depends_on "z80oolong/fonts/powerline-symbols" => :recommended
+
+  def powerline_symbols_conf_xml
+    <<~EOS
+    <?xml version="1.0"?>
+    <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+    <fontconfig>
+      <alias>
+        <family>monospace</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Droid Sans Mono</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Droid Sans Mono Slashed</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Droid Sans Mono Dotted</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>DejaVu Sans Mono</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>DejaVu Sans Mono</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Envy Code R</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Inconsolata</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Lucida Console</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Monaco</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Pragmata</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>PragmataPro</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Menlo</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Source Code Pro</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Consolas</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Anonymous pro</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Bitstream Vera Sans Mono</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Liberation Mono</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ubuntu Mono</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Meslo LG L</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Meslo LG L DZ</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Meslo LG M</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Meslo LG M DZ</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Meslo LG S</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Meslo LG S DZ</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+      <alias>
+        <family>Ume Gothic</family>
+        <prefer><family>PowerlineSymbols</family></prefer>
+      </alias>
+    </fontconfig>
+    EOS
+  end
 
   def fonts_conf_xml(path)
     <<~EOS
@@ -50,16 +163,21 @@ class PowerlineFonts < Formula
   def install
     fontpath = share/"fonts/Homebrew/powerline-fonts"
     fontpath.mkpath
-    conf = etc/"fonts/conf.d/55-homebrew-powerline-fonts.conf"
-    conf.delete if conf.exist?
+
+    conf1 = etc/"fonts/conf.d/55-homebrew-powerline-fonts.conf"
+    conf1.delete if conf1.exist?
+    conf2 = etc/"fonts/conf.d/15-powerline-symbols-alias.conf"
+    conf2.delete if conf2.exist?
 
     inreplace "./install.sh", %{font_dir="$HOME/.local/share/fonts"}, %{font_dir="#{share}/fonts/Homebrew/powerline-fonts"}
     system "./install.sh"
-    conf.write(fonts_conf_xml(opt_share/"fonts"))
+
+    conf1.write(fonts_conf_xml(opt_share/"fonts"))
+    conf2.write(powerline_symbols_conf_xml)
   end
 
   def post_install
-    system "#{Formula["fontconfig"].opt_bin}/fc-cache", "-v"
+    system "#{Formula["fontconfig"].opt_bin}/fc-cache", "-vf"
   end
 
   test do

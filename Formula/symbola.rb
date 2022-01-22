@@ -47,10 +47,12 @@ class Symbola < Formula
   def install
     fontpath = share/"fonts/Homebrew/symbola"
     fontpath.mkpath
+
     conf = etc/"fonts/conf.d/55-homebrew-symbola.conf"
     conf.delete if conf.exist?
 
     fontpath.install "./Symbola.otf"
+
     conf.write(fonts_conf_xml(opt_share/"fonts"))
   end
 
