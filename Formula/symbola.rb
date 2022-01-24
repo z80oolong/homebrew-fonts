@@ -56,6 +56,23 @@ class Symbola < Formula
     conf.write(fonts_conf_xml(opt_share/"fonts"))
   end
 
+  def caveats; <<~EOS
+    If you want to use Truetype font `Koruri`, as follows make a symbolic link
+    in directory /usr/share/fonts or $HOME/.local/share/fonts, and run `fc-cache`
+    command.
+    
+      # cd /usr/share/fonts
+      # ln -sf #{ENV["HOMEBREW_PREFIX"]}/share/fonts/Homebrew .
+      # fc-cache -vf
+      
+      or
+      
+      $ cd $HOME/.local/share/fonts/Homebrew
+      $ ln -sf #{ENV["HOMEBREW_PREFIX"]}/share/fonts/Homebrew .
+      $ fc-cache -fv
+    EOS
+  end
+
   def post_install
     system "#{Formula["fontconfig"].opt_bin}/fc-cache", "-v"
   end
