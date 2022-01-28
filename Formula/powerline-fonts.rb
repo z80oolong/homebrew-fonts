@@ -177,7 +177,7 @@ class PowerlineFonts < Formula
   end
 
   def caveats; <<~EOS
-    If you want to use Truetype font `Koruri`, as follows make a symbolic link
+    If you want to use Truetype font `Powerline Fonts`, as follows make a symbolic link
     in directory /usr/share/fonts or $HOME/.local/share/fonts, and run `fc-cache`
     command.
     
@@ -189,7 +189,7 @@ class PowerlineFonts < Formula
       
       $ cd $HOME/.local/share/fonts/Homebrew
       $ ln -sf #{ENV["HOMEBREW_PREFIX"]}/share/fonts/Homebrew .
-      $ fc-cache -fv
+      $ fc-cache -vf
     EOS
   end
 

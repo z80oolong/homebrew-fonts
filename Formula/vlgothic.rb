@@ -95,7 +95,7 @@ class Vlgothic < Formula
       
       $ cd $HOME/.local/share/fonts/Homebrew
       $ ln -sf #{ENV["HOMEBREW_PREFIX"]}/share/fonts/Homebrew .
-      $ fc-cache -fv
+      $ fc-cache -vf
     EOS
   end
 
