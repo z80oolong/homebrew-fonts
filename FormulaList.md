@@ -2,7 +2,7 @@
 
 ## 概要
 
-本文書では、 [Linuxbrew][BREW] 向け Tap リポジトリ z80oolong/fonts に含まれる Formula 一覧を示します。各 Formula の詳細等については ```brew info <formula>``` コマンドも参照して下さい。
+本文書では、 [Homebrew for Linux][BREW] 向け Tap リポジトリ z80oolong/fonts に含まれる Formula 一覧を示します。各 Formula の詳細等については ```brew info <formula>``` コマンドも参照して下さい。
 
 **なお、この formula によって導入された TrueType フォントをシステムの環境全体及びユーザ個人の環境全体において使用する場合は、以下のようにして、ディレクトリ ```/usr/share/fonts``` 若しくは ```$HOME/.local/share/fonts``` 以下にシンボリックリンクを作成し、コマンド ```fc-cache``` を起動する必要があることに留意して下さい。**
 
@@ -26,10 +26,6 @@
 ### z80oolong/fonts/vlgothic
 
 [鈴木大輔氏][DICY]らによる、 [M+ OUTLINE FONTS][MPLS]ベースのモダンゴシック体の日本語 TrueType フォントである [VL ゴシックフォント][VLGO]を導入するための Formula です。本リポジトリで導入される [VL ゴシックフォント][VLGO]では、 [powerline][POWE] に対応したシンボルフォントを適切に表示できるように修正を加えてあります。
-
-### z80oolong/fonts/symbola
-
-George Douros 氏らによる、絵文字等各種シンボル文字を表示させる為の TrueType フォントである [Symbola フォント][SYMB]を導入するための Formula です。
 
 ### z80oolong/fonts/koruri
 

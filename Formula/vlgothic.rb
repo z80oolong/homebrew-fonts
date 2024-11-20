@@ -104,6 +104,6 @@ class Vlgothic < Formula
   end
 
   test do
-    system "#{Formula["fontconfig"].opt_bin}/fc-list"
+    system Formula["fontconfig"].opt_bin/"fc-list"
   end
 end
